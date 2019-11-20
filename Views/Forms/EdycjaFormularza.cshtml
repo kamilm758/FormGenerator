@@ -1,0 +1,37 @@
+﻿@model FormContainsField
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Dodaj/usuń pole</title>
+</head>
+<body>
+    <form asp-action="EdycjaFormularza" method="post">
+        <p>
+            <input asp-for="IdForm" style="visibility:hidden"/>
+        </p>
+        @for(int i=0;i<Model.fields.Count();i++)
+        {
+    <p><label asp-for="fields[i].NameField" style="font-weight:bold; font-size:large">@Model.fields[i].NameField</label>
+        <input asp-for="fields[i].NameField" hidden/>
+        <input asp-for="fields[i].IdField" hidden />
+    </p>
+
+            <p>
+                <label>Czy formularz ma zawierać pole?</label>
+                <select asp-for="fields[i].ContainsField">
+                    <option value="">Wybierz opcję</option>
+                    <option value="true">Tak</option>
+                    <option value="false">Nie</option>
+                </select>
+            </p>
+        }
+        <button type="submit">Zapisz</button>
+    </form>
+</body>
+</html>
+

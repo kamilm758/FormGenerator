@@ -1,0 +1,42 @@
+﻿@model List<FieldWithValue>
+
+@{
+    ViewData["Title"] = "Formularz";
+}
+
+<h1>Details</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Formularz">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @for (var i = 0; i < Model.Count; i++)
+            {
+                <input asp-for="@Model[i].Field.Id" hidden />
+                <input asp-for="@Model[i].Field.Name" hidden />
+                <input asp-for="@Model[i].Field.Type" hidden />
+                if (Model[i].Field.Type == "text")
+                {
+                    <div class="form-group">
+                        <label asp-for="@Model[i].Field.Name" class="control-label">@Model[i].Field.Name</label>
+                        <input class="form-control" type="@Model[i].Field.Type" asp-for="@Model[i].TextValue" />
+                        <span asp-validation-for="@Model[i].Field.Type" class="text-danger"></span>
+                    </div>
+
+                }
+                else if (Model[i].Field.Type == "checkbox")
+                {
+                    <div class="form-group">
+                        <label asp-for="@Model[i].Field.Name" class="control-label">@Model[i].Field.Name</label>
+                        <input class="form-control" type="@Model[i].Field.Type" asp-for="@Model[i].BoolValue" />
+                        <span asp-validation-for="@Model[i].Field.Name" class="text-danger"></span>
+                    </div>
+
+                }
+            }
+            <div class="form-group">
+            </div>
+            <input type="submit" value="Wyślij formularz" class="btn btn-primary" />
+        </form>
+    </div>
+</div>
