@@ -19,7 +19,7 @@ namespace FormGenerator.Controllers
             _context = context;
         }
 
-        // GET: Forms
+        //wyświetlenie listy formularzy
         public async Task<IActionResult> ListaFormularzy()
         {
             return View(await _context.Froms.ToListAsync());
@@ -33,11 +33,16 @@ namespace FormGenerator.Controllers
                 return NotFound();
             }
             //wyszukanie oraz przekonwertowanie do listy Id pól które są dołączone do formularza
+            //bierzemy pod uwagę tylko id pól należących do formularza
             var fieldsInForm = _context.FormField.Where(ff=>ff.IdForm==id).Select(ff=>ff.IdField).ToList();
-            //pozyskanie wymaganego modelu
+            //pobieramy dane pól których id pobrano powyżej
             var field = _context.Field.Where(f => fieldsInForm.Contains(f.Id)).ToList();
             //przekształcenie do modelu pozwalającego przenoszenie wartości
+            //czyli dodanie miejsca na wartość "Value" której nie potrzebójemy w bazie danyc
+            //potrzebne jest jedynie w celu przeniesienia wartości wpisanych w otworzonym formularzu
+            //do metody POST
             List<FieldWithValue> fieldWithValues = new List<FieldWithValue>();
+            //przepisywanie danych do odpowiedniego modelu. ma ktoś pomysł jak bardziej optymalnie przenosić???
             foreach(var key in field)
             {
                 FieldWithValue pom = new FieldWithValue();
@@ -54,14 +59,14 @@ namespace FormGenerator.Controllers
 
             return View(fieldWithValues);
         }
-
+        // w tej metodzie w przyszłości nastąpi wysłanie wpisanych formularzy do bazy danych
         [HttpPost]
         public IActionResult Formularz(List<FieldWithValue> field)
         {
             return View("WyslanoFormularz", field);
         }
 
-        // GET: Forms/Create
+        // stworzenie formularza
         public IActionResult Create()
         {
             return View();
@@ -93,11 +98,15 @@ namespace FormGenerator.Controllers
             IdFieldBool idFieldBool;
             //pobranie do listy wszystkich pól(id i nazwę)
             var allFields = _context.Field.Select(af => new { af.Id, af.Name }).ToList();
-            //pobranie do listy wszystkich pól które są przypisane do formularza
+            //pobranie do listy wszystkich przypisań pól które są przypisane do formularza
             var fieldsInForm = _context.FormField.Where(ff => ff.IdForm == id).Select(ff => ff.IdField).ToList();
-            FormContainsField formContainsField=new FormContainsField();
-            formContainsField.IdForm = id;
-            foreach(var field in allFields)
+            //tworzenie instancji modelu potrzebnego do wyświetlenia danych w widoku raz pobrania niezbędnych
+            //informacji
+            FormContainsField formContainsField = new FormContainsField
+            {
+                IdForm = id
+            };
+            foreach (var field in allFields)
             {
                 idFieldBool = new IdFieldBool
                 {
@@ -132,6 +141,7 @@ namespace FormGenerator.Controllers
 
             if (ModelState.IsValid)
             {
+                //pobranie wszystkich powiązań pól z edytowanym formularzem
                 var FormField = _context.FormField.Where(ff => ff.IdForm == formContainsField.IdForm).Select(ff => ff.IdField).ToList();
                 FormField formField;
                 foreach(var key in formContainsField.fields)

@@ -12,3 +12,5 @@ namespace FormGenerator.Models.Modele_pomocnicze
         public bool? ContainsField { get; set; }
     }
 }
+//Model pomocniczy służący do przypisywania pól do formularza. jeśli "ContainsField" jest true, wtedy
+//pole o "IdField" jest przypisane do fromularza. Model ten jest wykorzystywany w klasie "FormContainsField".

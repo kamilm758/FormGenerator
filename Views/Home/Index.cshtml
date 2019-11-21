@@ -1,12 +1,11 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <a asp-controller="Fields" asp-action="Create" class="btn-group-vertical">Dodaj nowe pole</a>
-    <br />
-    <a asp-controller="Forms" asp-action="Create">Stwórz formularz</a>
-    <br />
-    <a asp-controller="Forms" asp-action="ListaFormularzy">Wyświetl stworzone formularze</a>
+    <a asp-controller="Fields" asp-action="Create" class="btn btn-primary">Dodaj nowe pole</a>
+    <br /><br />
+    <a asp-controller="Forms" asp-action="Create" class="btn btn-primary">Stwórz formularz</a>
+    <br /><br />
+    <a asp-controller="Forms" asp-action="ListaFormularzy" class="btn btn-primary">Wyświetl stworzone formularze</a>
 </div>
